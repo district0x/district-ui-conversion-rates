@@ -73,7 +73,7 @@ Complete example might be:
 (defn home-page []
   (let [converted-eth-usd (subscribe [::rates-subs/convert :ETH :USD 2])]
     (fn []
-      [:div "2 USD is currently " @converted-eth-usd " ETH"])))
+      [:div "2 ETH is currently " @converted-eth-usd " USD"])))
 ```
 
 ## district.ui.conversion-rates.events
