@@ -27,35 +27,29 @@
           converted-eth-usd (subscribe [::subs/convert :ETH :USD 2])]
 
       (-> (mount/with-args
-            #_ {:conversion-rates {:from-currencies [:ETH]
-                                :to-currencies [:USD :EUR]}}
-            {:conversion-rates {:from-currencies [:ETH :BTC]
-                                :to-currencies [:USD :EUR :DNT]}})
+            {:conversion-rates {:from-currencies [:ETH]
+                                :to-currencies [:USD :EUR]}})
         (mount/start))
 
       (wait-for [::events/set-conversion-rates ::events/conversion-rates-load-failed]
-        (#(do (println %) %) @converted-eth-usd)
-
-
-
-        #_ (let [{:keys [:USD :EUR]} (:ETH @conversion-rates)]
+        (let [{:keys [:USD :EUR]} (:ETH @conversion-rates)]
           (is (number? USD))
           (is (number? EUR)))
 
-        #_ (let [{:keys [:USD :EUR]} @conversion-rates-eth]
+        (let [{:keys [:USD :EUR]} @conversion-rates-eth]
           (is (number? USD))
           (is (number? EUR)))
 
-        #_ (is (number? @conversion-rate-eth-usd))
+        (is (number? @conversion-rate-eth-usd))
 
-        #_ (let [{:keys [:USD :EUR]} @converted-eth]
+        (let [{:keys [:USD :EUR]} @converted-eth]
           (is (number? USD))
           (is (= USD (* (:USD @conversion-rates-eth) 2)))
           (is (number? EUR))
           (is (= EUR (* (:EUR @conversion-rates-eth) 2))))
 
-        #_ (is (number? @converted-eth-usd))
-        #_ (is (= @converted-eth-usd (* @conversion-rate-eth-usd 2)))))))
+        (is (number? @converted-eth-usd))
+        (is (= @converted-eth-usd (* @conversion-rate-eth-usd 2)))))))
 
 
 (deftest invalid-params-tests
@@ -71,5 +65,4 @@
     (is (thrown? :default (dispatch [::events/load-conversion-rates {:from-currencies :ETH}])))
 
     (is (thrown? :default (dispatch [::events/set-conversion-rates {:ETH 2}])))))
-
 
