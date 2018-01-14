@@ -1,4 +1,4 @@
-(defproject district0x/district-ui-conversion-rates "1.0.0"
+(defproject district0x/district-ui-conversion-rates "1.0.1"
   :description "district UI module for handling conversion rates"
   :url "https://github.com/district0x/district-ui-conversion-rates"
   :license {:name "Eclipse Public License"

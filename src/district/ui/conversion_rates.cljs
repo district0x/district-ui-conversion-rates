@@ -14,11 +14,9 @@
 (s/def ::from-currencies (s/coll-of keyword?))
 (s/def ::to-currencies (s/coll-of keyword?))
 (s/def ::request-timeout number?)
-(s/def ::disable-loading-at-start? boolean?)
-(s/def ::polling-interval-ms number?)
-(s/def ::disable-polling? boolean?)
-(s/def ::opts (s/keys :opt-un [::from-currencies ::to-currencies ::request-timeout
-                               ::disable-loading-at-start? ::polling-interval-ms ::disable-polling?]))
+(s/def ::request-interval-ms number?)
+(s/def ::cache-ttl? number?)
+(s/def ::opts (s/nilable (s/keys :opt-un [::from-currencies ::to-currencies ::request-timeout ::request-interval-ms ::cache-ttl?])))
 
 (defn start [opts]
   (s/assert ::opts opts)

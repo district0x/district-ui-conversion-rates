@@ -5,24 +5,26 @@
 Clojurescript [mount](https://github.com/tolitius/mount) + [re-frame](https://github.com/Day8/re-frame) module for a district UI, that handles conversion rates between fiat currencies and cryptocurrencies.  
 This module currently uses [cryptocompare.com](https://www.cryptocompare.com/) API to obtain rates. 
 
+It also uses internal caching, so other modules don't load same rates unnecessarily many times.
+
 
 ## Installation
-Add `[district0x/district-ui-conversion-rates "1.0.0"]` into your project.clj  
+Add `[district0x/district-ui-conversion-rates "1.0.1"]` into your project.clj  
 Include `[district.ui.conversion-rates]` in your CLJS file, where you use `mount/start`
 
 **Warning:** district0x modules are still in early stages, therefore API can change in a future.
 
 ## district.ui.conversion-rates
-This namespace contains conversion-rates [mount](https://github.com/tolitius/mount) module. Once you start mount it'll take care 
-of loading conversion rates.
+This namespace contains conversion-rates [mount](https://github.com/tolitius/mount) module.
+In case you pass initial configuration, the module will load rates at mount start. 
 
 You can pass following args to initiate this module: 
 * `:from-currencies` Currencies you'll be converting from
 * `:to-currencies` Currencies you'll be converting to
-* `:request-timeout` Timeout of request to obtain rates, before throwing error (ms)
-* `:disable-loading-at-start?` Pass true if you don't want load rates at mount start
-* `:polling-interval-ms` How often rates should be reloaded. Default: 300000 (5 min.)
-* `:disable-polling?` Disable reloading rates
+* `:request-timeout` Timeout of request to obtain rates, before throwing error (ms). Default: 10000 (10s)
+* `:request-interval-ms` How often rates should be reloaded. Default: 300000 (5 min.). Pass 0 to disable reloading.
+* `:cache-ttl` Time-to-live of the cache. A rate won't be loaded again until this duration passes since last load of that rate. 
+Default: 180000 (3 min.). 
 
 ```clojure
   (ns my-district.core
@@ -82,8 +84,24 @@ re-frame events provided by this module:
 #### `::start [opts]`
 Event fired at mount start.
 
+#### `::watch-conversion-rates [opts]`
+Loads conversion rates and sets up reloading. Use this event from other modules, that need specific conversion rates. 
+opts:   
+`:from-currencies`  
+`:to-currencies`  
+`:request-interval-ms` (optional)  
+`:request-timeout` (optional)  
+`:id` Id of reloading interval, so you can stop it later.  
+
+#### `::stop-watching-conversion-rates [id]`
+Stops reloading rates by id. 
+
 #### `::load-conversion-rates [opts]`
-Loads conversion rates from external API. Pass same args as to mount-with-args
+Loads conversion rates from external API. 
+opts: 
+`:from-currencies`  
+`:to-currencies`  
+`:request-timeout` (optional)  
 
 #### `::set-conversion-rates [conversion-rates]`
 Set conversion rates into re-frame db. Also, this event is fired after `::load-conversion-rates`. You can use it to hook into
@@ -124,6 +142,12 @@ Works the same way as sub `::convert`
 
 #### `merge-conversion-rates [db conversion-rates]`
 Merges in new conversion rates and returns new re-frame db.
+
+#### `cache-ttl [db]`
+Returns current cache-ttl
+
+#### `assoc-cache-ttl [db cache-ttl]`
+Associates new cache-ttl and returns new re-frame db.
 
 #### `dissoc-conversion-rates [db]`
 Cleans up this module from re-frame db. 
