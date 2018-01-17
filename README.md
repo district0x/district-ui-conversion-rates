@@ -12,7 +12,29 @@ It also uses internal caching, so other modules don't load same rates unnecessar
 Add `[district0x/district-ui-conversion-rates "1.0.1"]` into your project.clj  
 Include `[district.ui.conversion-rates]` in your CLJS file, where you use `mount/start`
 
+## API Overview
+
 **Warning:** district0x modules are still in early stages, therefore API can change in a future.
+
+- [district.ui.conversion-rates](#districtuiconversion-rates)
+- [district.ui.conversion-rates.subs](#districtuiconversion-ratessubs)
+  - [::conversion-rates](#conversion-rates-sub)
+  - [::conversion-rate](#conversion-rate-sub)
+  - [::convert](#convert-sub)
+- [district.ui.conversion-rates.events](#districtuiconversion-ratesevents)
+  - [::watch-conversion-rates](#watch-conversion-rates)
+  - [::stop-watching-conversion-rates](#stop-watching-conversion-rates)
+  - [::load-conversion-rates](#load-conversion-rates)
+  - [::set-conversion-rates](#set-conversion-rates)
+  - [::conversion-rates-load-failed](#conversion-rates-load-failed)
+- [district.ui.conversion-rates.queries](#districtuiconversion-ratesqueries)
+  - [conversion-rates](#conversion-rates)
+  - [conversion-rate](#conversion-rate)
+  - [convert](#convert)
+  - [merge-conversion-rates](#merge-conversion-rates)
+  - [cache-ttl](#cache-ttl)
+  - [assoc-cache-ttl](#assoc-cache-ttl)
+
 
 ## district.ui.conversion-rates
 This namespace contains conversion-rates [mount](https://github.com/tolitius/mount) module.
@@ -40,7 +62,7 @@ Default: 180000 (3 min.).
 ## district.ui.conversion-rates.subs
 re-frame subscriptions provided by this module:
 
-#### `::conversion-rates`
+#### <a name="conversion-rates-sub">`::conversion-rates`
 Returns conversion rates. You can use 2 forms:
 ```clojure
 @(subscribe [::subs/conversion-rates])
@@ -50,14 +72,14 @@ Returns conversion rates. You can use 2 forms:
 ;; {:USD 663.98, :EUR 570.87, :DNT 8871.79}
 ```
 
-#### `::conversion-rate`
+#### <a name="conversion-rate-sub">`::conversion-rate`
 Returns conversion rate of a pair
 ```clojure
 @(subscribe [::subs/conversion-rate :ETH :USD])
 ;; 664.92
 ```
 
-#### `::convert`
+#### <a name="convert-sub">`::convert`
 Converts passed value according to rate
 ```clojure
 @(subscribe [::subs/convert :ETH 2])
@@ -81,10 +103,7 @@ Complete example might be:
 ## district.ui.conversion-rates.events
 re-frame events provided by this module:
 
-#### `::start [opts]`
-Event fired at mount start.
-
-#### `::watch-conversion-rates [opts]`
+#### <a name="watch-conversion-rates">`::watch-conversion-rates [opts]`
 Loads conversion rates and sets up reloading. Use this event from other modules, that need specific conversion rates. 
 opts:   
 `:from-currencies`  
@@ -93,38 +112,35 @@ opts:
 `:request-timeout` (optional)  
 `:id` Id of reloading interval, so you can stop it later.  
 
-#### `::stop-watching-conversion-rates [id]`
+#### <a name="stop-watching-conversion-rates">`::stop-watching-conversion-rates [id]`
 Stops reloading rates by id. 
 
-#### `::load-conversion-rates [opts]`
+#### <a name="load-conversion-rates">`::load-conversion-rates [opts]`
 Loads conversion rates from external API. 
 opts: 
 `:from-currencies`  
 `:to-currencies`  
 `:request-timeout` (optional)  
 
-#### `::set-conversion-rates [conversion-rates]`
+#### <a name="set-conversion-rates">`::set-conversion-rates [conversion-rates]`
 Set conversion rates into re-frame db. Also, this event is fired after `::load-conversion-rates`. You can use it to hook into
 event flow.
 
-#### `::conversion-rates-load-failed`
+#### <a name="conversion-rates-load-failed">`::conversion-rates-load-failed`
 Event fired when loading failed 
-
-#### `::stop`
-Cleanup event fired on mount stop.
 
 ## district.ui.conversion-rates.queries
 DB queries provided by this module:  
 *You should use them in your events, instead of trying to get this module's 
 data directly with `get-in` into re-frame db.*
 
-#### `conversion-rates [db]`
+#### <a name="conversion-rates">`conversion-rates [db]`
 Works the same way as sub `::conversion-rates`
 
-#### `conversion-rate [db from to]`
+#### <a name="conversion-rate">`conversion-rate [db from to]`
 Works the same way as sub `::conversion-rate`
 
-#### `convert [db from to value]`
+#### <a name="convert">`convert [db from to value]`
 Works the same way as sub `::convert`
 
 ```clojure
@@ -140,17 +156,14 @@ Works the same way as sub `::convert`
       {:dispatch [::do-other-thing]})))
 ```
 
-#### `merge-conversion-rates [db conversion-rates]`
+#### <a name="merge-conversion-rates">`merge-conversion-rates [db conversion-rates]`
 Merges in new conversion rates and returns new re-frame db.
 
-#### `cache-ttl [db]`
+#### <a name="cache-ttl">`cache-ttl [db]`
 Returns current cache-ttl
 
-#### `assoc-cache-ttl [db cache-ttl]`
+#### <a name="assoc-cache-ttl">`assoc-cache-ttl [db cache-ttl]`
 Associates new cache-ttl and returns new re-frame db.
-
-#### `dissoc-conversion-rates [db]`
-Cleans up this module from re-frame db. 
 
 ## Development
 ```bash
