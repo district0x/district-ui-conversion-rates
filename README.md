@@ -104,23 +104,23 @@ Complete example might be:
 re-frame events provided by this module:
 
 #### <a name="watch-conversion-rates">`::watch-conversion-rates [opts]`
-Loads conversion rates and sets up reloading. Use this event from other modules, that need specific conversion rates. 
+Loads conversion rates and sets up reloading. Use this event from other modules, that need specific conversion rates.   
 opts:   
-`:from-currencies`  
-`:to-currencies`  
-`:request-interval-ms` (optional)  
-`:request-timeout` (optional)  
-`:id` Id of reloading interval, so you can stop it later.  
+- `:from-currencies`  
+- `:to-currencies`  
+- `:request-interval-ms` (optional)  
+- `:request-timeout` (optional)  
+- `:id` Id of reloading interval, so you can stop it later.  
 
 #### <a name="stop-watching-conversion-rates">`::stop-watching-conversion-rates [id]`
 Stops reloading rates by id. 
 
 #### <a name="load-conversion-rates">`::load-conversion-rates [opts]`
-Loads conversion rates from external API. 
+Loads conversion rates from external API.   
 opts: 
-`:from-currencies`  
-`:to-currencies`  
-`:request-timeout` (optional)  
+- `:from-currencies`  
+- `:to-currencies`  
+- `:request-timeout` (optional)  
 
 #### <a name="set-conversion-rates">`::set-conversion-rates [conversion-rates]`
 Set conversion rates into re-frame db. Also, this event is fired after `::load-conversion-rates`. You can use it to hook into
