@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/district0x/district-ui-conversion-rates.svg?branch=master)](https://travis-ci.org/district0x/district-ui-conversion-rates)
 
-Clojurescript [mount](https://github.com/tolitius/mount) + [re-frame](https://github.com/Day8/re-frame) module for a district UI, that handles conversion rates between fiat currencies and cryptocurrencies.  
+Clojurescript [re-mount](https://github.com/district0x/d0x-INFRA/blob/master/re-mount.md) module, that handles conversion rates between fiat currencies and cryptocurrencies.  
 This module currently uses [cryptocompare.com](https://www.cryptocompare.com/) API to obtain rates. 
 
 It also uses internal caching, so other modules don't load same rates unnecessarily many times.
